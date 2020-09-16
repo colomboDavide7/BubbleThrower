@@ -5,19 +5,26 @@
  */
 package bubblescreensaver.model;
 
+import bubblescreensaver.throwableObjects.ResourceManagerIF;
+import bubblescreensaver.throwableObjects.ThrowableObject;
+import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Point;
-import java.util.Observable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author davidecolombo
  */
-public class BubbleThrower extends Observable 
-                           implements BubbleThrowerIF, RenderingIF {
+public class BubbleThrower implements BubbleThrowerIF, RenderingIF {
     
-    private DrawModel model = null;
+    private ResourceManagerIF resManager = null;
+    private List<ThrowableObjectIF> livingObjects;
+    private DrawModel model;
+    
     private Point pressed = null;
     private Point released = null;
+    
     private int percentagePower;
     private final int MAX_DISTANCE_IN_PIXEL = 300;
     
@@ -26,14 +33,27 @@ public class BubbleThrower extends Observable
     }
     
     private BubbleThrower(){
-        this.model = new DrawModel();
+        this.model     = new DrawModel();
+        this.livingObjects = new ArrayList<>();
     }
     
-// =============================================================================
+// =============================================================================    
     @Override
-    public void addBubble(Point point) {
-        model.addBubble(point);
-        this.pressed = point;
+    public void addNewObject(Point point) {        
+        ThrowableObject clone = resManager.getClone();
+        
+        this.pressed = centerPoint(point, clone.getXOffsetInPixel(), clone.getYOffsetInPixel());
+        clone.setLocationInPixel(pressed);
+        
+        this.livingObjects.add(clone);
+        model.addLivingObjects(livingObjects);
+    }
+    
+    private Point centerPoint(Point p, int offsetX, int offsetY){
+        Point centeredPoint = new Point();
+        centeredPoint.x = p.x - offsetX;
+        centeredPoint.y = p.y - offsetY;
+        return centeredPoint;
     }
     
     @Override
@@ -56,12 +76,15 @@ public class BubbleThrower extends Observable
     
     @Override
     public void throwBubble() {
-        model.clearPressedAndReleasedPoints();
         System.err.println("percentage power = " + this.percentagePower + "%");
-        // Lancio un Thread che agisce sulla struttura dati della Bubble specifica
+        model.clearPressedAndReleasedPoints();
         
-        // Aggiorno posizione e velocità con cui si muove la Bubble
+    }
         
+    @Override
+    public void setResourceManager(ResourceManagerIF manager) {
+        if(this.resManager == null)
+            this.resManager = manager;
     }
     
 // =============================================================================
@@ -69,5 +92,5 @@ public class BubbleThrower extends Observable
     public DrawModel getDrawModel() {
         return this.model;
     }
-    
+
 }

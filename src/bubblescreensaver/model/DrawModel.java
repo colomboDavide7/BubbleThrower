@@ -5,9 +5,9 @@
  */
 package bubblescreensaver.model;
 
+import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.util.List;
 import java.awt.Point;
-import java.util.ArrayList;
 
 /**
  *
@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class DrawModel {
     
-    private List<Point> bubblePoints  = null;
+    private List<ThrowableObjectIF> liviginObjects;
     private Point pressed = null;
     private Point released = null;
     
@@ -24,10 +24,8 @@ public class DrawModel {
         this.released = null;
     }
     
-    void addBubble(Point point){
-        if(bubblePoints == null)
-            bubblePoints = new ArrayList<>();
-        bubblePoints.add(point);
+    void addLivingObjects(List<ThrowableObjectIF> livingObject){
+        this.liviginObjects = livingObject;
     }
         
     void addClickedPoint(Point point){
@@ -44,8 +42,8 @@ public class DrawModel {
     }
     
 // =============================================================================
-    public List<Point> getBubbleList(){
-        return this.bubblePoints;
+    public List<ThrowableObjectIF> getLivingObjects(){
+        return this.liviginObjects;
     }
     
     public Point getPressedPoint(){

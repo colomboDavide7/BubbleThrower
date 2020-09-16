@@ -9,6 +9,8 @@ import bubblescreensaver.controllers.BubbleController;
 import bubblescreensaver.model.BubbleThrower;
 import bubblescreensaver.model.BubbleThrowerIF;
 import bubblescreensaver.model.RenderingIF;
+import bubblescreensaver.throwableObjects.ResourceManager;
+import bubblescreensaver.throwableObjects.ResourceManagerIF;
 import bubblescreensaver.view.DisplayFrame;
 
 /**
@@ -23,15 +25,21 @@ public class Main {
     
     public static void main(String[] args){
         
+        String objectType = args[0];
+        ResourceManagerIF resManager = ResourceManager.getInstance();
+        resManager.loadResource(objectType);
+        
         // View
         DisplayFrame frame = DisplayFrame.createNewDisplayFrame(DISPLAY_WIDTH_IN_PIXEL, 
                                                                 DISPLAY_HEIGHT_IN_PIXEL, 
                                                                 REFRESH_TIME_IN_MILLIS);
         // Model
         BubbleThrowerIF thrower = BubbleThrower.createBubbleThrower();
+        thrower.setResourceManager(resManager);
         
         // Controller
-        BubbleController controller = BubbleController.createBubbleController(thrower);
+        BubbleController controller = BubbleController.createBubbleController();
+        controller.setObjectThrower(thrower);
         
         frame.setInteractor((RenderingIF) thrower);
         frame.addMouseListener(controller);

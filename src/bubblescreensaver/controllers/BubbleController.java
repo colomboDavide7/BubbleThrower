@@ -19,11 +19,14 @@ public class BubbleController extends MouseAdapter {
 
     private BubbleThrowerIF thrower = null;
     
-    public static BubbleController createBubbleController(BubbleThrowerIF thrower){
-        return new BubbleController(thrower);
+    public static BubbleController createBubbleController(){
+        return new BubbleController();
     }
     
-    private BubbleController(BubbleThrowerIF thrower){
+    private BubbleController(){
+    }
+    
+    public void setObjectThrower(BubbleThrowerIF thrower){
         this.thrower = thrower;
     }
     
@@ -31,7 +34,7 @@ public class BubbleController extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent evt){
         Point clickedPoint = evt.getPoint();
-        thrower.addBubble(clickedPoint);
+        thrower.addNewObject(clickedPoint);
     }
     
     @Override

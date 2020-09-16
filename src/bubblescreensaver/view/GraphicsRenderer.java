@@ -7,6 +7,8 @@ package bubblescreensaver.view;
 
 import bubblescreensaver.model.DrawModel;
 import bubblescreensaver.model.RenderingIF;
+import bubblescreensaver.throwableObjects.ThrowableObject;
+import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -68,9 +70,9 @@ class GraphicsRenderer extends Thread {
     void draw(Graphics g){
         DrawModel model = interactor.getDrawModel();
         
-        List<Point> bubbles = model.getBubbleList();
-        if(bubbles != null)
-            drawPoints(g, bubbles);
+        List<ThrowableObjectIF> livingObjects = model.getLivingObjects();
+        if(livingObjects != null)
+            drawLivingObjects(g, livingObjects);
         
         Point clickedPoint = model.getPressedPoint();
         Point draggedPoint = model.getReleasedPoint();
@@ -80,13 +82,15 @@ class GraphicsRenderer extends Thread {
     }
     
 // =============================================================================
-    private void drawPoints(Graphics g, List<Point> points){
-        if(points.isEmpty())
+    private void drawLivingObjects(Graphics g, List<ThrowableObjectIF> livingObjects){
+        if(livingObjects.isEmpty())
             return;
         
-        g.setColor(Color.BLACK);
-        for(Point p : points)
-            g.fillOval(p.x, p.y, 5, 5);
+        for(ThrowableObjectIF obj : livingObjects)
+            g.drawImage(obj.getImage(), 
+                        obj.getXLocationInPixel(), 
+                        obj.getYLocationInPixel(), 
+                        null);
     }
     
     private void drawLine(Graphics g, Point clicked, Point dragged){
