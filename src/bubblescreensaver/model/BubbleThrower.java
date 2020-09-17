@@ -5,7 +5,8 @@
  */
 package bubblescreensaver.model;
 
-import bubblescreensaver.throwableObjects.ResourceManagerIF;
+import bubblescreensaver.throwableObjects.ThrowableFactory;
+import bubblescreensaver.throwableObjects.ThrowableFactoryIF;
 import bubblescreensaver.throwableObjects.ThrowableObject;
 import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Point;
@@ -19,9 +20,9 @@ import java.util.List;
  */
 public class BubbleThrower implements BubbleThrowerIF {
     
-    private ResourceManagerIF resManager;
     private List<ThrowableObjectIF> livingObjects;
     private TrajectoryCalculator calculator;
+    private ThrowableObject prototype;
     
     public static BubbleThrower createBubbleThrower(){
         return new BubbleThrower();
@@ -32,14 +33,14 @@ public class BubbleThrower implements BubbleThrowerIF {
         this.calculator = TrajectoryCalculator.createTrajectoryCalculator();
     }
     
-    public void setResourceManager(ResourceManagerIF manager) {
-        this.resManager = manager;
+    public void setPrototype(ThrowableObject prototype){
+        this.prototype = prototype;
     }
     
 // =============================================================================    
     @Override
     public void addNewObjectAtLocation(Point point) {        
-        ThrowableObject clone = resManager.getClone();
+        ThrowableObject clone = prototype.clone();
         clone.setLocationInPixel(point);
         this.livingObjects.add(clone);
     }

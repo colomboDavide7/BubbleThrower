@@ -11,6 +11,6 @@ package bubblescreensaver.throwableObjects;
  */
 public interface ThrowableFactoryIF {
     
-    public abstract ThrowableObject getThrowableObject(String type);
+    public abstract ThrowableObject getPrototype(String objectType);
     
 }

@@ -7,8 +7,9 @@ package bubblescreensaver;
 
 import bubblescreensaver.controllers.BubbleController;
 import bubblescreensaver.model.BubbleThrower;
-import bubblescreensaver.throwableObjects.ResourceManager;
-import bubblescreensaver.throwableObjects.ResourceManagerIF;
+import bubblescreensaver.throwableObjects.ThrowableFactory;
+import bubblescreensaver.throwableObjects.ThrowableFactoryIF;
+import bubblescreensaver.throwableObjects.ThrowableObject;
 import bubblescreensaver.view.DisplayFrame;
 
 /**
@@ -24,14 +25,12 @@ public class Main {
     public static void main(String[] args){
         
         String objectType = args[0];
-        
-        // Resource Manager
-        ResourceManagerIF resManager = ResourceManager.getInstance();
-        resManager.loadResource(objectType);
+        ThrowableFactoryIF factory = ThrowableFactory.createThrowableFactory();
+        ThrowableObject prototype = factory.getPrototype(objectType);
         
         // Thrower
         BubbleThrower thrower = BubbleThrower.createBubbleThrower();
-        thrower.setResourceManager(resManager);
+        thrower.setPrototype(prototype);
         
         // Controller
         BubbleController controller = BubbleController.createBubbleController();
