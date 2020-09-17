@@ -5,7 +5,7 @@
  */
 package bubblescreensaver.view;
 
-import bubblescreensaver.model.RenderingIF;
+import bubblescreensaver.controllers.RenderingIF;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;

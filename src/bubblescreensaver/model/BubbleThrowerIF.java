@@ -5,21 +5,20 @@
  */
 package bubblescreensaver.model;
 
-import bubblescreensaver.throwableObjects.ResourceManagerIF;
+import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Point;
+import java.util.List;
 
 /**
  *
  * @author davidecolombo
  */
 public interface BubbleThrowerIF {
-    
-    public abstract void setResourceManager(ResourceManagerIF manager);
-    
+        
     public abstract void addNewObject(Point point);
     
-    public abstract void takeAim(Point point);
-    
     public abstract void throwBubble();
+    
+    public abstract List<ThrowableObjectIF> getLivingObjects();
     
 }

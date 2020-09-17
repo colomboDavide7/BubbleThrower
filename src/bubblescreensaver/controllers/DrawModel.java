@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bubblescreensaver.model;
+package bubblescreensaver.controllers;
 
 import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.util.List;
@@ -28,17 +28,12 @@ public class DrawModel {
         this.liviginObjects = livingObject;
     }
         
-    void addClickedPoint(Point point){
+    void addPressedPoint(Point point){
         this.pressed = point;
     }
     
-    void addDraggedPoint(Point point){
+    void addReleasedPoint(Point point){
         this.released = point;
-    }
-    
-    void addPressedAndReleasedPoints(Point pressed, Point released){
-        this.pressed = pressed;
-        this.released = released;
     }
     
 // =============================================================================

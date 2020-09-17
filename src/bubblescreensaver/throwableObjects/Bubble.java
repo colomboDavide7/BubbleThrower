@@ -32,6 +32,11 @@ public class Bubble extends ThrowableObject {
     }
 
     @Override
+    public Image getImage() {
+        return super.image;
+    }
+
+    @Override
     public int getXLocationInPixel() {
         return super.locationInPixel.x;
     }
@@ -39,11 +44,6 @@ public class Bubble extends ThrowableObject {
     @Override
     public int getYLocationInPixel() {
         return super.locationInPixel.y;
-    }
-
-    @Override
-    public Image getImage() {
-        return super.image;
     }
      
 }

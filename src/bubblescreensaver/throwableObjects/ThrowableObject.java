@@ -47,11 +47,3 @@ public abstract class ThrowableObject implements ThrowableObjectIF {
         return clonedImage;
     }
 }
-
-
-//    private int[] getOffsetsInPixel(){
-//        int[] offsets = new int[2];
-//        offsets[0] = this.image.getWidth(null) / 2;
-//        offsets[1] = this.image.getHeight(null) / 2;
-//        return offsets;
-//    }

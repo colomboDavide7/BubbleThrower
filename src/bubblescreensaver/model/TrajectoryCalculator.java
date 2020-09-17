@@ -5,29 +5,69 @@
  */
 package bubblescreensaver.model;
 
+import java.awt.Point;
+
 /**
  *
  * @author davidecolombo
  */
-class TrajectoryCalculator {
+public class TrajectoryCalculator implements TrajectoryCalculatorIF {
     
-    int clickedX;
-    int clickedY;
-    int draggedX;
-    int draggedY;
+    private Point pressedPoint  = null;
+    private Point releasedPoint = null;
     
-    private final int MAXIMUM_DISTANCE_IN_PIXEL = 100;
+    private int percentagePower;
+    private final int MAX_DISTANCE_IN_PIXEL = 300;
+
+    public static TrajectoryCalculator createTrajectoryCalculator(){
+        return new TrajectoryCalculator();
+    }
     
-    int getPercentageForce(){
-        int dx = draggedX - clickedX;
-        int dy = draggedY - clickedY;
-        
-        int distanceInPixel = (int) Math.sqrt(Math.pow(dy, 2) + Math.pow(dx, 2));
-        
-        if(distanceInPixel >= MAXIMUM_DISTANCE_IN_PIXEL)
-            return 100;
+    private TrajectoryCalculator(){
+    }
+    
+    int getPercentagePower() {
+        calculatePercentagePower();
+        return this.percentagePower;
+    }
+    
+    private void calculatePercentagePower(){
+        double distanceInPixel = calculateDistanceInPixelBetweenPoints();
+        if(distanceInPixel >= MAX_DISTANCE_IN_PIXEL)
+            this.percentagePower = 100;
         else
-            return (int) (distanceInPixel / MAXIMUM_DISTANCE_IN_PIXEL) * 100;
+            this.percentagePower = (int) ((distanceInPixel / (double) MAX_DISTANCE_IN_PIXEL)*100);
+    }
+    
+    private double calculateDistanceInPixelBetweenPoints(){
+        int deltaXinPixel = releasedPoint.x - pressedPoint.x;
+        int deltaYinPixel = releasedPoint.y - pressedPoint.y;
+        return Math.sqrt(Math.pow(deltaYinPixel, 2) + Math.pow(deltaXinPixel, 2));
+    }
+
+    public void clearPressedAndReleasedPoints(){
+        this.pressedPoint  = null;
+        this.releasedPoint = null;
+    }
+    
+    @Override
+    public void setReleasedPoint(Point released) {
+        this.releasedPoint = released;
+    }
+
+    @Override
+    public void setPressedPoint(Point pressed) {
+        this.pressedPoint = pressed;
+    }
+
+    @Override
+    public Point getPressedPoint() {
+        return this.pressedPoint;
+    }
+
+    @Override
+    public Point getReleasedPoint() {
+        return this.releasedPoint;
     }
     
 }

@@ -5,9 +5,8 @@
  */
 package bubblescreensaver.view;
 
-import bubblescreensaver.model.DrawModel;
-import bubblescreensaver.model.RenderingIF;
-import bubblescreensaver.throwableObjects.ThrowableObject;
+import bubblescreensaver.controllers.DrawModel;
+import bubblescreensaver.controllers.RenderingIF;
 import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -68,7 +67,7 @@ class GraphicsRenderer extends Thread {
     }
     
     void draw(Graphics g){
-        DrawModel model = interactor.getDrawModel();
+        DrawModel model = interactor.getPreconfigDrawModel();
         
         List<ThrowableObjectIF> livingObjects = model.getLivingObjects();
         if(livingObjects != null)
