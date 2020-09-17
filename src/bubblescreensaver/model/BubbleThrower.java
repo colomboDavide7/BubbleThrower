@@ -11,6 +11,7 @@ import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class BubbleThrower implements BubbleThrowerIF {
     
 // =============================================================================    
     @Override
-    public void addNewObject(Point point) {        
+    public void addNewObjectAtLocation(Point point) {        
         ThrowableObject clone = resManager.getClone();
         clone.setLocationInPixel(point);
         this.livingObjects.add(clone);
@@ -55,10 +56,8 @@ public class BubbleThrower implements BubbleThrowerIF {
     }
 
     @Override
-    public List<ThrowableObjectIF> getLivingObjects() {
-        if(this.livingObjects.isEmpty())
-            return Collections.emptyList(); // SPECIAL CASE
-        return this.livingObjects;
+    public Iterator getLivingObjects() {
+        return this.livingObjects.iterator();
     }
     
 }

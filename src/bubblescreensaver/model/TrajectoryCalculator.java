@@ -6,7 +6,6 @@
 package bubblescreensaver.model;
 
 import java.awt.Point;
-import java.util.LinkedList;
 
 /**
  *
@@ -14,7 +13,8 @@ import java.util.LinkedList;
  */
 public class TrajectoryCalculator implements TrajectoryCalculatorIF {
     
-    private LinkedList<Point> points;
+    private Point pressedPoint;
+    private Point releasedPoint;
     private final int MAX_DISTANCE_IN_PIXEL = 300;
 
     public static TrajectoryCalculator createTrajectoryCalculator(){
@@ -22,7 +22,16 @@ public class TrajectoryCalculator implements TrajectoryCalculatorIF {
     }
     
     private TrajectoryCalculator(){
-        points = new LinkedList<>();
+    }
+    
+    @Override
+    public void setReleasedPoint(Point point) {
+        this.releasedPoint = point;
+    }
+    
+    @Override
+    public void setPressedPoint(Point point) {
+        this.pressedPoint = point;
     }
     
     @Override
@@ -38,32 +47,9 @@ public class TrajectoryCalculator implements TrajectoryCalculatorIF {
     }
     
     private double calculateDistanceInPixelBetweenPoints(){
-        Point firstPoint = points.getFirst();
-        Point lastPoint  = points.getLast();
-        
-        int deltaXinPixel = lastPoint.x - firstPoint.x;
-        int deltaYinPixel = lastPoint.y - firstPoint.y;
+        int deltaXinPixel = releasedPoint.x - pressedPoint.x;
+        int deltaYinPixel = releasedPoint.y - pressedPoint.y;
         return Math.sqrt(Math.pow(deltaYinPixel, 2) + Math.pow(deltaXinPixel, 2));
-    }
-     
-    @Override
-    public void setReleasedPoint(Point released) {
-        this.points.add(released);
-    }
-    
-    @Override
-    public void setPressedPoint(Point pressed) {
-        this.points.add(pressed);
-    }
-    
-    @Override
-    public LinkedList<Point> getPoints() {
-        return points;
-    }
-
-    @Override
-    public void clearPoints() {
-        points.clear();
     }
     
 }

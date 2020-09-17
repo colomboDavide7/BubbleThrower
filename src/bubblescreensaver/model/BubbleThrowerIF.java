@@ -5,9 +5,8 @@
  */
 package bubblescreensaver.model;
 
-import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Point;
-import java.util.List;
+import java.util.Iterator;
 
 /**
  *
@@ -15,10 +14,10 @@ import java.util.List;
  */
 public interface BubbleThrowerIF {
         
-    public abstract void addNewObject(Point point);
+    public abstract void addNewObjectAtLocation(Point point);
     
     public abstract void throwBubble(int percentagePower);
     
-    public abstract List<ThrowableObjectIF> getLivingObjects();
+    public abstract Iterator getLivingObjects();
     
 }

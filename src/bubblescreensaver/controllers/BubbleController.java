@@ -7,14 +7,11 @@ package bubblescreensaver.controllers;
 
 import bubblescreensaver.model.BubbleThrowerIF;
 import bubblescreensaver.model.TrajectoryCalculatorIF;
-import bubblescreensaver.throwableObjects.ThrowableObjectIF;
-
-import java.util.List;
 import java.awt.Point;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.LinkedList;
+import java.util.Iterator;
 
 
 /**
@@ -47,32 +44,33 @@ public class BubbleController extends MouseAdapter implements RenderingIF {
     @Override
     public void mousePressed(MouseEvent evt){
         Point pressedPoint = evt.getPoint();
-        thrower.addNewObject(pressedPoint);
+        thrower.addNewObjectAtLocation(pressedPoint);
         calculator.setPressedPoint(pressedPoint);
+        model.addPressedPoint(pressedPoint);
     }
     
     @Override
     public void mouseDragged(MouseEvent evt){
-        Point releasedPoint = evt.getPoint();
-        calculator.setReleasedPoint(releasedPoint);
+        Point draggedPoint = evt.getPoint();
+        model.addDraggedPoint(draggedPoint);
+        model.setLineAsDrawable();
     }
     
     @Override
     public void mouseReleased(MouseEvent evt){
+        model.setLineAsNotDrawable();
+        Point releasedPoint = evt.getPoint();
+        calculator.setReleasedPoint(releasedPoint);
         int percentagePower = calculator.getPercentagePower();
         thrower.throwBubble(percentagePower);
-        calculator.clearPoints();
     }
     
 // =============================================================================
     @Override
     public DrawModel getPreconfigDrawModel() {
         
-        List<ThrowableObjectIF> livingObjects = thrower.getLivingObjects();
+        Iterator livingObjects = thrower.getLivingObjects();
         model.addLivingObjects(livingObjects);
-        
-        LinkedList<Point> points = calculator.getPoints();
-        model.addPoints(points);
         
         return model;
     }

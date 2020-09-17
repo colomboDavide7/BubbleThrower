@@ -5,10 +5,8 @@
  */
 package bubblescreensaver.controllers;
 
-import bubblescreensaver.throwableObjects.ThrowableObjectIF;
-import java.util.List;
 import java.awt.Point;
-import java.util.LinkedList;
+import java.util.Iterator;
 
 /**
  *
@@ -16,24 +14,46 @@ import java.util.LinkedList;
  */
 public class DrawModel {
     
-    private List<ThrowableObjectIF> liviginObjects;
-    private LinkedList<Point> points;
+    private Iterator liviginObjects;
+    private Point pressedPoint;
+    private Point draggedPoint;
+    private boolean canDrawLine = false;
     
-    void addLivingObjects(List<ThrowableObjectIF> livingObject){
-        this.liviginObjects = livingObject;
+    void setLineAsDrawable(){
+        this.canDrawLine = true;
     }
-        
-    void addPoints(LinkedList<Point> points){
-        this.points = points;
+    
+    void setLineAsNotDrawable(){
+        this.canDrawLine = false;
+    }
+    
+    void addPressedPoint(Point pressedPoint){
+        this.pressedPoint = pressedPoint;
+    }
+    
+    void addDraggedPoint(Point draggedPoint){
+        this.draggedPoint = draggedPoint;
+    }
+    
+    void addLivingObjects(Iterator livingObject){
+        this.liviginObjects = livingObject;
     }
     
 // =============================================================================
-    public List<ThrowableObjectIF> getLivingObjects(){
+    public Iterator getLivingObjects(){
         return this.liviginObjects;
     }
     
-    public LinkedList<Point> getPoints(){
-        return this.points;
+    public Point getPressedPoint(){
+        return this.pressedPoint;
+    }
+    
+    public Point getDraggedPoint(){
+        return this.draggedPoint;
+    }
+    
+    public boolean canDrawLine(){
+        return this.canDrawLine;
     }
     
 // =============================================================================

@@ -11,6 +11,7 @@ import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -69,31 +70,30 @@ class GraphicsRenderer extends Thread {
     void draw(Graphics g){
         DrawModel model = interactor.getPreconfigDrawModel();
         
-        List<ThrowableObjectIF> livingObjects = model.getLivingObjects();
+        Iterator<ThrowableObjectIF> livingObjects = model.getLivingObjects();
         drawLivingObjects(g, livingObjects);
         
-        LinkedList<Point> points = model.getPoints();
-        drawLineBetweenPoints(g, points);
+        if(model.canDrawLine()){
+            Point pressedPoint = model.getPressedPoint();
+            Point draggedPoint = model.getDraggedPoint();
+            drawLineBetweenPoints(g, pressedPoint, draggedPoint);
+        }
     }
     
 // =============================================================================
-    private void drawLivingObjects(Graphics g, List<ThrowableObjectIF> livingObjects){
-        for(ThrowableObjectIF obj : livingObjects)
+    private void drawLivingObjects(Graphics g, Iterator<ThrowableObjectIF> iterator){
+        while(iterator.hasNext()){
+            ThrowableObjectIF obj = iterator.next();
             g.drawImage(obj.getImage(),
                         obj.getXLocationInPixel(),
                         obj.getYLocationInPixel(),
                         null);
+        }
     }
     
-    private void drawLineBetweenPoints(Graphics g, LinkedList<Point> points){
-        try{
-            g.setColor(Color.RED);
-            Point firstPoint = points.getFirst();
-            Point lastPoint  = points.getLast();
-            g.drawLine(firstPoint.x, firstPoint.y, lastPoint.x, lastPoint.y);
-        }catch(NoSuchElementException ex){
-            // no points in the list
-        }
+    private void drawLineBetweenPoints(Graphics g, Point pressedPoint, Point draggedPoint){
+        g.setColor(Color.RED);
+        g.drawLine(pressedPoint.x, pressedPoint.y, draggedPoint.x, draggedPoint.y);
     }
     
 }
