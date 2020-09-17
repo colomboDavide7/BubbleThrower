@@ -7,7 +7,6 @@ package bubblescreensaver;
 
 import bubblescreensaver.controllers.BubbleController;
 import bubblescreensaver.model.BubbleThrower;
-import bubblescreensaver.model.TrajectoryCalculator;
 import bubblescreensaver.throwableObjects.ResourceManager;
 import bubblescreensaver.throwableObjects.ResourceManagerIF;
 import bubblescreensaver.view.DisplayFrame;
@@ -34,13 +33,9 @@ public class Main {
         BubbleThrower thrower = BubbleThrower.createBubbleThrower();
         thrower.setResourceManager(resManager);
         
-        // Calculator
-        TrajectoryCalculator calculator = TrajectoryCalculator.createTrajectoryCalculator();
-        
         // Controller
         BubbleController controller = BubbleController.createBubbleController();
         controller.setBubbleThrower(thrower);
-        controller.setTrajectoryCalculator(calculator);
         
         // View
         DisplayFrame frame = DisplayFrame.createNewDisplayFrame(DISPLAY_WIDTH_IN_PIXEL, 

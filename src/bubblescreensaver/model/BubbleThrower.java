@@ -10,7 +10,6 @@ import bubblescreensaver.throwableObjects.ThrowableObject;
 import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class BubbleThrower implements BubbleThrowerIF {
     
     private ResourceManagerIF resManager;
     private List<ThrowableObjectIF> livingObjects;
+    private TrajectoryCalculator calculator;
     
     public static BubbleThrower createBubbleThrower(){
         return new BubbleThrower();
@@ -29,6 +29,7 @@ public class BubbleThrower implements BubbleThrowerIF {
     
     private BubbleThrower(){
         this.livingObjects = new ArrayList<>();
+        this.calculator = TrajectoryCalculator.createTrajectoryCalculator();
     }
     
     public void setResourceManager(ResourceManagerIF manager) {
@@ -51,13 +52,24 @@ public class BubbleThrower implements BubbleThrowerIF {
     }
                   
     @Override
-    public void throwBubble(int percentagePower) {
+    public void throwBubble() {
+        int percentagePower = calculator.getPercentagePower();
         System.out.println("percentage power = " + percentagePower + "%");
     }
 
     @Override
     public Iterator getLivingObjects() {
         return this.livingObjects.iterator();
+    }
+    
+    @Override
+    public void setReleasedPoint(Point point) {
+        this.calculator.setReleasedPoint(point);
+    }
+
+    @Override
+    public void setPressedPoint(Point point) {
+        this.calculator.setPressedPoint(point);
     }
     
 }

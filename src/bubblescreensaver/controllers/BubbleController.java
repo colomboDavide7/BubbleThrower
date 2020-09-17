@@ -6,7 +6,6 @@
 package bubblescreensaver.controllers;
 
 import bubblescreensaver.model.BubbleThrowerIF;
-import bubblescreensaver.model.TrajectoryCalculatorIF;
 import java.awt.Point;
 
 import java.awt.event.MouseAdapter;
@@ -20,7 +19,6 @@ import java.util.Iterator;
  */
 public class BubbleController extends MouseAdapter implements RenderingIF {
 
-    private TrajectoryCalculatorIF calculator;
     private BubbleThrowerIF thrower;
     private DrawModel model;
     
@@ -35,17 +33,13 @@ public class BubbleController extends MouseAdapter implements RenderingIF {
     public void setBubbleThrower(BubbleThrowerIF thrower){
         this.thrower = thrower;
     }
-    
-    public void setTrajectoryCalculator(TrajectoryCalculatorIF calculator){
-        this.calculator = calculator;
-    }
-    
+        
 // =============================================================================
     @Override
     public void mousePressed(MouseEvent evt){
         Point pressedPoint = evt.getPoint();
+        thrower.setPressedPoint(pressedPoint);
         thrower.addNewObjectAtLocation(pressedPoint);
-        calculator.setPressedPoint(pressedPoint);
         model.addPressedPoint(pressedPoint);
     }
     
@@ -60,9 +54,8 @@ public class BubbleController extends MouseAdapter implements RenderingIF {
     public void mouseReleased(MouseEvent evt){
         model.setLineAsNotDrawable();
         Point releasedPoint = evt.getPoint();
-        calculator.setReleasedPoint(releasedPoint);
-        int percentagePower = calculator.getPercentagePower();
-        thrower.throwBubble(percentagePower);
+        thrower.setReleasedPoint(releasedPoint);
+        thrower.throwBubble();
     }
     
 // =============================================================================

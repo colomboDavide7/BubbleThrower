@@ -16,7 +16,11 @@ public interface BubbleThrowerIF {
         
     public abstract void addNewObjectAtLocation(Point point);
     
-    public abstract void throwBubble(int percentagePower);
+    public abstract void setReleasedPoint(Point point);
+    
+    public abstract void setPressedPoint(Point point);
+    
+    public abstract void throwBubble();
     
     public abstract Iterator getLivingObjects();
     

@@ -11,31 +11,28 @@ import java.awt.Point;
  *
  * @author davidecolombo
  */
-public class TrajectoryCalculator implements TrajectoryCalculatorIF {
+class TrajectoryCalculator {
     
     private Point pressedPoint;
     private Point releasedPoint;
     private final int MAX_DISTANCE_IN_PIXEL = 300;
 
-    public static TrajectoryCalculator createTrajectoryCalculator(){
+    static TrajectoryCalculator createTrajectoryCalculator(){
         return new TrajectoryCalculator();
     }
     
     private TrajectoryCalculator(){
     }
     
-    @Override
-    public void setReleasedPoint(Point point) {
+    void setReleasedPoint(Point point) {
         this.releasedPoint = point;
     }
     
-    @Override
-    public void setPressedPoint(Point point) {
+    void setPressedPoint(Point point) {
         this.pressedPoint = point;
     }
     
-    @Override
-    public int getPercentagePower() {
+    int getPercentagePower() {
         return calculatePercentagePower();
     }
     
