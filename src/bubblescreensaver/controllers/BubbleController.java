@@ -14,6 +14,7 @@ import java.awt.Point;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
 
 
 /**
@@ -22,9 +23,9 @@ import java.awt.event.MouseEvent;
  */
 public class BubbleController extends MouseAdapter implements RenderingIF {
 
-    private TrajectoryCalculatorIF calculator = null;
-    private BubbleThrowerIF thrower = null;
-    private DrawModel model = null;
+    private TrajectoryCalculatorIF calculator;
+    private BubbleThrowerIF thrower;
+    private DrawModel model;
     
     public static BubbleController createBubbleController(){
         return new BubbleController();
@@ -58,8 +59,9 @@ public class BubbleController extends MouseAdapter implements RenderingIF {
     
     @Override
     public void mouseReleased(MouseEvent evt){
-        thrower.throwBubble();
-        calculator.clearPressedAndReleasedPoints();
+        int percentagePower = calculator.getPercentagePower();
+        thrower.throwBubble(percentagePower);
+        calculator.clearPoints();
     }
     
 // =============================================================================
@@ -69,11 +71,8 @@ public class BubbleController extends MouseAdapter implements RenderingIF {
         List<ThrowableObjectIF> livingObjects = thrower.getLivingObjects();
         model.addLivingObjects(livingObjects);
         
-        Point pressedPoint = calculator.getPressedPoint();
-        model.addPressedPoint(pressedPoint);
-        
-        Point releasedPoint = calculator.getReleasedPoint();
-        model.addReleasedPoint(releasedPoint);
+        LinkedList<Point> points = calculator.getPoints();
+        model.addPoints(points);
         
         return model;
     }

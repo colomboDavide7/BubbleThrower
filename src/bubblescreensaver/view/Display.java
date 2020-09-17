@@ -15,8 +15,8 @@ import javax.swing.JPanel;
  */
 class Display extends JPanel {
                 
-    private Dimension displayDim      = null; 
-    private GraphicsRenderer renderer = null;
+    private Dimension displayDim; 
+    private GraphicsRenderer renderer;
     
     static Display createNewDisplay(){
         return new Display();
@@ -34,8 +34,7 @@ class Display extends JPanel {
     
 // =============================================================================
     void setDisplayDimension(int widthInPixel, int heightInPixel){
-        if(displayDim == null)
-            displayDim = new Dimension(widthInPixel, heightInPixel);
+        displayDim = new Dimension(widthInPixel, heightInPixel);
         setDisplayMinMaxAndPreferredDimensions();
     }
     

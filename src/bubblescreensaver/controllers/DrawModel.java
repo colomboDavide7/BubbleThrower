@@ -8,6 +8,7 @@ package bubblescreensaver.controllers;
 import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.util.List;
 import java.awt.Point;
+import java.util.LinkedList;
 
 /**
  *
@@ -16,24 +17,14 @@ import java.awt.Point;
 public class DrawModel {
     
     private List<ThrowableObjectIF> liviginObjects;
-    private Point pressed = null;
-    private Point released = null;
-    
-    void clearPressedAndReleasedPoints(){
-        this.pressed = null;
-        this.released = null;
-    }
+    private LinkedList<Point> points;
     
     void addLivingObjects(List<ThrowableObjectIF> livingObject){
         this.liviginObjects = livingObject;
     }
         
-    void addPressedPoint(Point point){
-        this.pressed = point;
-    }
-    
-    void addReleasedPoint(Point point){
-        this.released = point;
+    void addPoints(LinkedList<Point> points){
+        this.points = points;
     }
     
 // =============================================================================
@@ -41,12 +32,8 @@ public class DrawModel {
         return this.liviginObjects;
     }
     
-    public Point getPressedPoint(){
-        return this.pressed;
-    }
-    
-    public Point getReleasedPoint(){
-        return this.released;
+    public LinkedList<Point> getPoints(){
+        return this.points;
     }
     
 // =============================================================================

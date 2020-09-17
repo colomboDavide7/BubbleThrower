@@ -10,6 +10,7 @@ import bubblescreensaver.throwableObjects.ThrowableObject;
 import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class BubbleThrower implements BubbleThrowerIF {
     
-    private ResourceManagerIF resManager = null;
+    private ResourceManagerIF resManager;
     private List<ThrowableObjectIF> livingObjects;
     
     public static BubbleThrower createBubbleThrower(){
@@ -30,8 +31,7 @@ public class BubbleThrower implements BubbleThrowerIF {
     }
     
     public void setResourceManager(ResourceManagerIF manager) {
-        if(this.resManager == null)
-            this.resManager = manager;
+        this.resManager = manager;
     }
     
 // =============================================================================    
@@ -50,13 +50,14 @@ public class BubbleThrower implements BubbleThrowerIF {
     }
                   
     @Override
-    public void throwBubble() {
-//        System.err.println("percentage power = " + this.percentagePower + "%");
- 
+    public void throwBubble(int percentagePower) {
+        System.out.println("percentage power = " + percentagePower + "%");
     }
 
     @Override
     public List<ThrowableObjectIF> getLivingObjects() {
+        if(this.livingObjects.isEmpty())
+            return Collections.emptyList(); // SPECIAL CASE
         return this.livingObjects;
     }
     

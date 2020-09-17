@@ -11,7 +11,9 @@ import bubblescreensaver.throwableObjects.ThrowableObjectIF;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  *
@@ -19,16 +21,15 @@ import java.util.List;
  */
 class GraphicsRenderer extends Thread {
     
-    private Display display = null;
+    private Display display;
     private int refreshTimeInMillis;
-    private RenderingIF interactor = null;
+    private RenderingIF interactor;
     
     static GraphicsRenderer createNewRenderer(){
         return new GraphicsRenderer();
     }
     
     private GraphicsRenderer(){
-        // do nothing
     }
     
     void setRefreshTimeInMillis(int time){
@@ -52,7 +53,6 @@ class GraphicsRenderer extends Thread {
                 Thread.sleep(refreshTimeInMillis);
             }
         }catch(InterruptedException ex){
-            // do nothing
         }
     }
     
@@ -70,31 +70,30 @@ class GraphicsRenderer extends Thread {
         DrawModel model = interactor.getPreconfigDrawModel();
         
         List<ThrowableObjectIF> livingObjects = model.getLivingObjects();
-        if(livingObjects != null)
-            drawLivingObjects(g, livingObjects);
+        drawLivingObjects(g, livingObjects);
         
-        Point clickedPoint = model.getPressedPoint();
-        Point draggedPoint = model.getReleasedPoint();
-        if(clickedPoint != null && draggedPoint != null)
-            drawLine(g, clickedPoint, draggedPoint);
-
+        LinkedList<Point> points = model.getPoints();
+        drawLineBetweenPoints(g, points);
     }
     
 // =============================================================================
     private void drawLivingObjects(Graphics g, List<ThrowableObjectIF> livingObjects){
-        if(livingObjects.isEmpty())
-            return;
-        
         for(ThrowableObjectIF obj : livingObjects)
-            g.drawImage(obj.getImage(), 
-                        obj.getXLocationInPixel(), 
-                        obj.getYLocationInPixel(), 
+            g.drawImage(obj.getImage(),
+                        obj.getXLocationInPixel(),
+                        obj.getYLocationInPixel(),
                         null);
     }
     
-    private void drawLine(Graphics g, Point clicked, Point dragged){
-        g.setColor(Color.RED);
-        g.drawLine(dragged.x, dragged.y, clicked.x, clicked.y);
+    private void drawLineBetweenPoints(Graphics g, LinkedList<Point> points){
+        try{
+            g.setColor(Color.RED);
+            Point firstPoint = points.getFirst();
+            Point lastPoint  = points.getLast();
+            g.drawLine(firstPoint.x, firstPoint.y, lastPoint.x, lastPoint.y);
+        }catch(NoSuchElementException ex){
+            // no points in the list
+        }
     }
     
 }

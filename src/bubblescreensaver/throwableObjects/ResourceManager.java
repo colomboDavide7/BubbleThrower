@@ -20,6 +20,7 @@ public class ResourceManager implements ResourceManagerIF {
     private static ResourceManager theInstance = null;
     
     private ResourceManager(){
+        this.factory = new ThrowableFactory();
     }
     
     public synchronized static ResourceManager getInstance(){
@@ -40,25 +41,21 @@ public class ResourceManager implements ResourceManagerIF {
     
     @Override
     public void loadResource(String objectType) {
-        File[] allFiles   = getFilesFromWorkingDir();
-        File searchedFile = searchFileNameThatContainsType(allFiles, objectType);
-            
-        if(searchedFile != null)
-            createThrowablePrototype(searchedFile.getName(), 
-                                     objectType);
+        try{
+            File[] allFiles   = getFilesFromWorkingDir();
+            File searchedFile = searchFileNameThatContainsType(allFiles, objectType);
+            createThrowablePrototype(searchedFile.getName(), objectType);
+        }catch(LoadResourceException ex){
+            System.out.println(ex.getMessage());
+            System.exit(1);
+        }
     }
     
     private File[] getFilesFromWorkingDir(){
-        try{
-            String dirName  = System.getProperty("user.dir");
-            File workingDir = new File(dirName);
-            File[] allFiles = workingDir.listFiles();
-            return allFiles;
-        }catch(Exception ex){
-            System.err.println("Error reading directory contents");
-            System.exit(0);
-        }
-        return null;
+        String dirName  = System.getProperty("user.dir");
+        File workingDir = new File(dirName);
+        File[] allFiles = workingDir.listFiles();
+        return allFiles;
     }
     
     private File searchFileNameThatContainsType(File[] allFiles, String objectType){
@@ -66,20 +63,13 @@ public class ResourceManager implements ResourceManagerIF {
                 if(!allFiles[i].isDirectory())
                     if(allFiles[i].getName().contains(objectType))
                         return allFiles[i];
-        return null;
+        throw new LoadResourceException("There's no file that contains \"" + objectType + "\" in its name.");
     }
     
     private void createThrowablePrototype(String filename, String objectType){
-        try{
-            Image image = readImageFromFile(filename);
-            this.factory = new ThrowableFactory();
-            this.prototype = factory.getThrowableObject(objectType);
-            this.prototype.setImage(image);
-        }catch(Exception ex){
-            System.out.println(ex.getMessage());
-            System.err.println("Error reading the file: " + objectType);
-            System.exit(0);
-        }
+        Image image    = readImageFromFile(filename);
+        this.prototype = factory.getThrowableObject(objectType);
+        this.prototype.setImage(image);
     }
     
     private Image readImageFromFile(String filename){
@@ -87,10 +77,10 @@ public class ResourceManager implements ResourceManagerIF {
             Image image = ImageIO.read(new File(filename));
             return image;
         } catch (IOException ex) {
-            System.out.println("Error loading the image: " + filename);
-            System.exit(0);
+           throw new LoadResourceException("Error reading the Image file: " + filename
+                                         + "\nIOException has occured with this message:"
+                                         + "\n" + ex.getMessage());
         }
-        return null;
     }
     
 // =============================================================================

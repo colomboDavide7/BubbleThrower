@@ -17,7 +17,7 @@ public interface BubbleThrowerIF {
         
     public abstract void addNewObject(Point point);
     
-    public abstract void throwBubble();
+    public abstract void throwBubble(int percentagePower);
     
     public abstract List<ThrowableObjectIF> getLivingObjects();
     

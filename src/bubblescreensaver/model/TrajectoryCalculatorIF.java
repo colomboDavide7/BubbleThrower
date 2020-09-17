@@ -6,6 +6,7 @@
 package bubblescreensaver.model;
 
 import java.awt.Point;
+import java.util.LinkedList;
 
 /**
  *
@@ -13,14 +14,15 @@ import java.awt.Point;
  */
 public interface TrajectoryCalculatorIF {
     
-    public abstract void clearPressedAndReleasedPoints();
+    public abstract void clearPoints();
     
     public abstract void setReleasedPoint(Point released);
     
     public abstract void setPressedPoint(Point pressed);
     
-    public abstract Point getPressedPoint();
+    public abstract LinkedList<Point> getPoints();
     
-    public abstract Point getReleasedPoint();
+    public abstract int getPercentagePower();
+    
     
 }

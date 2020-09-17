@@ -25,6 +25,7 @@ public class Main {
     public static void main(String[] args){
         
         String objectType = args[0];
+        
         // Resource Manager
         ResourceManagerIF resManager = ResourceManager.getInstance();
         resManager.loadResource(objectType);

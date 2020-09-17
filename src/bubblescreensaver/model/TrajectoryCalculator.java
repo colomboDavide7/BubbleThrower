@@ -6,6 +6,7 @@
 package bubblescreensaver.model;
 
 import java.awt.Point;
+import java.util.LinkedList;
 
 /**
  *
@@ -13,10 +14,7 @@ import java.awt.Point;
  */
 public class TrajectoryCalculator implements TrajectoryCalculatorIF {
     
-    private Point pressedPoint  = null;
-    private Point releasedPoint = null;
-    
-    private int percentagePower;
+    private LinkedList<Point> points;
     private final int MAX_DISTANCE_IN_PIXEL = 300;
 
     public static TrajectoryCalculator createTrajectoryCalculator(){
@@ -24,50 +22,48 @@ public class TrajectoryCalculator implements TrajectoryCalculatorIF {
     }
     
     private TrajectoryCalculator(){
+        points = new LinkedList<>();
     }
     
-    int getPercentagePower() {
-        calculatePercentagePower();
-        return this.percentagePower;
+    @Override
+    public int getPercentagePower() {
+        return calculatePercentagePower();
     }
     
-    private void calculatePercentagePower(){
+    private int calculatePercentagePower(){
         double distanceInPixel = calculateDistanceInPixelBetweenPoints();
-        if(distanceInPixel >= MAX_DISTANCE_IN_PIXEL)
-            this.percentagePower = 100;
-        else
-            this.percentagePower = (int) ((distanceInPixel / (double) MAX_DISTANCE_IN_PIXEL)*100);
+        if(distanceInPixel < MAX_DISTANCE_IN_PIXEL)
+            return (int) ((distanceInPixel / (double) MAX_DISTANCE_IN_PIXEL)*100);
+        return 100;
     }
     
     private double calculateDistanceInPixelBetweenPoints(){
-        int deltaXinPixel = releasedPoint.x - pressedPoint.x;
-        int deltaYinPixel = releasedPoint.y - pressedPoint.y;
+        Point firstPoint = points.getFirst();
+        Point lastPoint  = points.getLast();
+        
+        int deltaXinPixel = lastPoint.x - firstPoint.x;
+        int deltaYinPixel = lastPoint.y - firstPoint.y;
         return Math.sqrt(Math.pow(deltaYinPixel, 2) + Math.pow(deltaXinPixel, 2));
     }
-
-    public void clearPressedAndReleasedPoints(){
-        this.pressedPoint  = null;
-        this.releasedPoint = null;
+     
+    @Override
+    public void setReleasedPoint(Point released) {
+        this.points.add(released);
     }
     
     @Override
-    public void setReleasedPoint(Point released) {
-        this.releasedPoint = released;
-    }
-
-    @Override
     public void setPressedPoint(Point pressed) {
-        this.pressedPoint = pressed;
+        this.points.add(pressed);
+    }
+    
+    @Override
+    public LinkedList<Point> getPoints() {
+        return points;
     }
 
     @Override
-    public Point getPressedPoint() {
-        return this.pressedPoint;
-    }
-
-    @Override
-    public Point getReleasedPoint() {
-        return this.releasedPoint;
+    public void clearPoints() {
+        points.clear();
     }
     
 }

@@ -34,6 +34,16 @@ public class DisplayFrame extends JFrame {
         configureDisplayFrame();
     }
     
+    private void configureDisplay(int widthInPixel, int heigthInPixel){
+        display = Display.createNewDisplay();
+        display.setDisplayDimension(widthInPixel, heigthInPixel);
+    }
+    
+    private void configureRenderingThread(int refreshTimeInMillis){
+        this.renderer = GraphicsRenderer.createNewRenderer();
+        this.renderer.setRefreshTimeInMillis(refreshTimeInMillis);
+    }
+    
     private void configureDisplayFrame(){
                 
         renderer.setDisplay(display);
@@ -53,20 +63,9 @@ public class DisplayFrame extends JFrame {
         });
     }
     
-    private void configureDisplay(int widthInPixel, int heigthInPixel){
-        display = Display.createNewDisplay();
-        display.setDisplayDimension(widthInPixel, heigthInPixel);
-    }
-    
-    private void configureRenderingThread(int refreshTimeInMillis){
-        this.renderer = GraphicsRenderer.createNewRenderer();
-        this.renderer.setRefreshTimeInMillis(refreshTimeInMillis);
-    }
-    
 // =============================================================================
     public void startRenderingThread(){
-        if(renderer != null)
-            renderer.start();
+        renderer.start();
     }
     
     @Override
