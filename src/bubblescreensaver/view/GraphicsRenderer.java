@@ -7,7 +7,7 @@ package bubblescreensaver.view;
 
 import bubblescreensaver.controllers.DrawModel;
 import bubblescreensaver.controllers.RenderingIF;
-import bubblescreensaver.throwableObjects.ThrowableObjectIF;
+import bubblescreensaver.throwableTool.ThrowableObjectIF;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;

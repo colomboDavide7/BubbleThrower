@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bubblescreensaver.throwableObjects;
+package bubblescreensaver.throwableTool;
 
 import java.awt.Image;
 import java.awt.Point;
@@ -20,7 +20,7 @@ public class Bubble extends ThrowableObject {
     }
     
     private Bubble(){
-        locationInPixel = new Point();
+        super.locationInPixel = new Point();
     }
     
     @Override
@@ -33,7 +33,7 @@ public class Bubble extends ThrowableObject {
 
     @Override
     public Image getImage() {
-        return super.image;
+        return this.image;
     }
 
     @Override
@@ -45,5 +45,5 @@ public class Bubble extends ThrowableObject {
     public int getYLocationInPixel() {
         return super.locationInPixel.y;
     }
-     
+    
 }

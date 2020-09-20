@@ -5,13 +5,12 @@
  */
 package bubblescreensaver.controllers;
 
-import bubblescreensaver.model.BubbleThrowerIF;
 import java.awt.Point;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
-
+import bubblescreensaver.throwableTool.BubbleThrowerIF;
 
 /**
  *
@@ -38,9 +37,8 @@ public class BubbleController extends MouseAdapter implements RenderingIF {
     @Override
     public void mousePressed(MouseEvent evt){
         Point pressedPoint = evt.getPoint();
-        thrower.setPressedPoint(pressedPoint);
-        thrower.addNewObjectAtLocation(pressedPoint);
         model.addPressedPoint(pressedPoint);
+        thrower.addThrowableObjectAtLocation(pressedPoint);
     }
     
     @Override

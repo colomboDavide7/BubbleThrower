@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bubblescreensaver.model;
+package bubblescreensaver.throwableTool;
 
 import java.awt.Point;
 import java.util.Iterator;
@@ -14,11 +14,9 @@ import java.util.Iterator;
  */
 public interface BubbleThrowerIF {
         
-    public abstract void addNewObjectAtLocation(Point point);
+    public abstract void addThrowableObjectAtLocation(Point point);
     
     public abstract void setReleasedPoint(Point point);
-    
-    public abstract void setPressedPoint(Point point);
     
     public abstract void throwBubble();
     

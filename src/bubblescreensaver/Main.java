@@ -6,10 +6,10 @@
 package bubblescreensaver;
 
 import bubblescreensaver.controllers.BubbleController;
-import bubblescreensaver.model.BubbleThrower;
-import bubblescreensaver.throwableObjects.ThrowableFactory;
-import bubblescreensaver.throwableObjects.ThrowableFactoryIF;
-import bubblescreensaver.throwableObjects.ThrowableObject;
+import bubblescreensaver.throwableTool.BubbleThrower;
+import bubblescreensaver.throwableTool.ThrowableFactory;
+import bubblescreensaver.throwableTool.ThrowableFactoryIF;
+import bubblescreensaver.throwableTool.ThrowableObject;
 import bubblescreensaver.view.DisplayFrame;
 
 /**

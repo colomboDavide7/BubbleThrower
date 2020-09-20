@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bubblescreensaver.model;
+package bubblescreensaver.throwableTool;
 
 import java.awt.Point;
 
@@ -12,7 +12,7 @@ import java.awt.Point;
  * @author davidecolombo
  */
 class TrajectoryCalculator {
-    
+        
     private Point pressedPoint;
     private Point releasedPoint;
     private final int MAX_DISTANCE_IN_PIXEL = 300;
@@ -34,6 +34,10 @@ class TrajectoryCalculator {
     
     int getPercentagePower() {
         return calculatePercentagePower();
+    }
+    
+    Point getDestinationInPixel(){
+        return new Point();
     }
     
     private int calculatePercentagePower(){
