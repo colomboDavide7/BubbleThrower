@@ -18,34 +18,32 @@ class ThrowableMover extends Thread {
     
     private MotionRuler ruler;
     private ThrowableObject toMove;
+    private DirectionHandler directionHandler;
+    private int percentagePower;
     
-    private int percentagePowerPush;
-    private Point destinationInPixel;
-    
-    static ThrowableMover createMover(ThrowableObject toMove, MotionRuler ruler){
-        return new ThrowableMover(toMove, ruler);
-    }
-    
-    private ThrowableMover(ThrowableObject toMove, MotionRuler ruler){
+    ThrowableMover(ThrowableObject toMove, MotionRuler ruler, DirectionHandler directionHandler){
         this.toMove = toMove;
         this.ruler = ruler;
+        this.directionHandler = directionHandler;
     }
     
-    void setPercentagePowerPush(int percentagePower){
-        this.percentagePowerPush = percentagePower;
-    }
-    
-    void setDestinationInPixel(Point destinationInPixel){
-        this.destinationInPixel = destinationInPixel;
-    }
-    
-    boolean isInMyPlace(ThrowableObject toMove){
-        return toMove.isInMyPlace(toMove);
-    }
+    void launch(int percentagePower, Point releasedPoint){
+        this.percentagePower = percentagePower;
+        toMove.direction = directionHandler.getDirectionFromPointToPoint(releasedPoint, 
+                                                                         toMove.locationInPixel);
+        System.out.println("INITIAL DIRECTION X = " + toMove.direction.x + 
+                           "INITIAL DIRECTION Y = " + toMove.direction.y);
         
+        ruler.assignWallIntersection(toMove);
+        
+        System.out.println("WALL INTERSECTION X = " + toMove.wallIntersection.x + 
+                           "WALL INTERSECTION Y = " + toMove.wallIntersection.y);
+        
+        super.start();
+    }
+    
     @Override
     public void run(){
-        
         for(;;){
             move();
         }
@@ -53,21 +51,17 @@ class ThrowableMover extends Thread {
     
     private void move(){
         try{
-            int doneSteps = 0;
             int stepsToDo = getStepsToDo();
-            
-            Point currentLocation = toMove.getLocationInPixel();
-            
-            int deltaXInPixel = (destinationInPixel.x - currentLocation.x) / stepsToDo;
-            int deltaYInPixel = (destinationInPixel.y - currentLocation.y) / stepsToDo;
+            int deltaXInPixel = (toMove.direction.x - toMove.locationInPixel.x) / stepsToDo;
+            int deltaYInPixel = (toMove.direction.y - toMove.locationInPixel.y) / stepsToDo;            
+            int doneSteps = 0;
             
             while(doneSteps < stepsToDo){
                 doneSteps++;
                 moveLocation(deltaXInPixel, deltaYInPixel);
-                Thread.sleep(1000);
+                Thread.sleep(1000/FPS);
             }
         }catch(InterruptedException ex){
-            
         }
     }
     
@@ -77,14 +71,16 @@ class ThrowableMover extends Thread {
     
     private void moveLocation(int deltaXInPixel, int deltaYInPixel){
         try{
-            Point currentLocation = toMove.getLocationInPixel();
-            Point locationToCheck = new Point(currentLocation.x + deltaXInPixel, 
-                                              currentLocation.y + deltaYInPixel);
-            toMove.setLocationToCheck(locationToCheck);
+            toMove.locationToCheck.x = toMove.locationToCheck.x + deltaXInPixel;
+            toMove.locationToCheck.y = toMove.locationToCheck.y + deltaYInPixel;
             ruler.checkLocationForMover(toMove);
-            toMove.setLocationInPixel(currentLocation);
-        }catch(ViolatedRuleException ex){
-            System.err.println(ex.getMessage());
+        }catch(BoundaryHittedException ex){
+            System.err.println("\n\nHIT THE BORDER\n\n");
+//            directionHandler.reflectLocationAcrossIntersection(toMove);
+//            directionHandler.setPressedPoint(toMove.wallIntersection);
+//            directionHandler.setReleasedPoint(toMove.locationInPixel);
+//            directionHandler.assignDirectionPoint(toMove);
+//            ruler.assignWallIntersection(toMove);
         }
     }
     

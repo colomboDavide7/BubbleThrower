@@ -5,8 +5,11 @@
  */
 package bubblescreensaver.controllers;
 
+import bubblescreensaver.throwableTool.ThrowableObject;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -14,7 +17,9 @@ import java.util.Iterator;
  */
 public class DrawModel {
     
-    private Iterator liviginObjects;
+    private final int MAX_DISTANCE_IN_PIXEL = 300;
+    
+    private List<ThrowableObject> liviginObjects = new ArrayList<>();
     private Point pressedPoint;
     private Point draggedPoint;
     private boolean canDrawLine = false;
@@ -35,13 +40,30 @@ public class DrawModel {
         this.draggedPoint = draggedPoint;
     }
     
-    void addLivingObjects(Iterator livingObject){
-        this.liviginObjects = livingObject;
+    void addLivingObjects(ThrowableObject obj){
+        this.liviginObjects.add(obj);
+    }
+    
+    int getPercentagePower() {
+        return calculatePercentagePower();
+    }
+    
+    private int calculatePercentagePower(){
+        double distanceInPixel = calculateDistanceInPixelBetweenPoints();
+        if(distanceInPixel < MAX_DISTANCE_IN_PIXEL)
+            return (int) ((distanceInPixel / (double) MAX_DISTANCE_IN_PIXEL)*100);
+        return 100;
+    }
+    
+    private double calculateDistanceInPixelBetweenPoints(){
+        int deltaXinPixel = draggedPoint.x - pressedPoint.x;
+        int deltaYinPixel = draggedPoint.y - pressedPoint.y;
+        return Math.sqrt(Math.pow(deltaYinPixel, 2) + Math.pow(deltaXinPixel, 2));
     }
     
 // =============================================================================
     public Iterator getLivingObjects(){
-        return this.liviginObjects;
+        return this.liviginObjects.iterator();
     }
     
     public Point getPressedPoint(){

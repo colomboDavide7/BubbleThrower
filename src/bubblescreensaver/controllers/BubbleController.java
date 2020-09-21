@@ -5,12 +5,13 @@
  */
 package bubblescreensaver.controllers;
 
+import bubblescreensaver.throwableTool.MotionRulerIF;
+import bubblescreensaver.throwableTool.ThrowableObject;
+import java.awt.Image;
 import java.awt.Point;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Iterator;
-import bubblescreensaver.throwableTool.BubbleThrowerIF;
 
 /**
  *
@@ -18,51 +19,54 @@ import bubblescreensaver.throwableTool.BubbleThrowerIF;
  */
 public class BubbleController extends MouseAdapter implements RenderingIF {
 
-    private BubbleThrowerIF thrower;
+    private ThrowableObject prototype;
+    private MotionRulerIF motionRuler;
     private DrawModel model;
     
-    public static BubbleController createBubbleController(){
-        return new BubbleController();
+    public static BubbleController createBubbleController(ThrowableObject prototype){
+        return new BubbleController(prototype);
     }
     
-    private BubbleController(){
+    private BubbleController(ThrowableObject prototype){
+        this.prototype = prototype;
         this.model = new DrawModel();
+        this.motionRuler = MotionRulerIF.createMotionRuler();
     }
     
-    public void setBubbleThrower(BubbleThrowerIF thrower){
-        this.thrower = thrower;
-    }
-        
 // =============================================================================
     @Override
     public void mousePressed(MouseEvent evt){
-        Point pressedPoint = evt.getPoint();
-        model.addPressedPoint(pressedPoint);
-        thrower.addThrowableObjectAtLocation(pressedPoint);
+        Point centeredLocation = this.getCenteredLocation(evt.getPoint());
+        ThrowableObject clone = prototype.clone(centeredLocation);
+        model.addPressedPoint(centeredLocation);
+        motionRuler.createThrowableMoverFor(clone);
+        model.addLivingObjects(clone);
+    }
+    
+    private Point getCenteredLocation(Point locationToCenter){
+        Image image = prototype.getImage();
+        int xLocationInPixel = locationToCenter.x - image.getWidth(null) / 2;
+        int yLocationInPixel = locationToCenter.y - image.getHeight(null) / 2;
+        return new Point(xLocationInPixel, yLocationInPixel);
     }
     
     @Override
     public void mouseDragged(MouseEvent evt){
-        Point draggedPoint = evt.getPoint();
-        model.addDraggedPoint(draggedPoint);
+        model.addDraggedPoint(this.getCenteredLocation(evt.getPoint()));
         model.setLineAsDrawable();
     }
     
     @Override
     public void mouseReleased(MouseEvent evt){
+        Point centeredPoint = this.getCenteredLocation(evt.getPoint());
         model.setLineAsNotDrawable();
-        Point releasedPoint = evt.getPoint();
-        thrower.setReleasedPoint(releasedPoint);
-        thrower.throwBubble();
+        motionRuler.launchLastMoverCreated(model.getPercentagePower(), 
+                                           centeredPoint);
     }
     
 // =============================================================================
     @Override
     public DrawModel getPreconfigDrawModel() {
-        
-        Iterator livingObjects = thrower.getLivingObjects();
-        model.addLivingObjects(livingObjects);
-        
         return model;
     }
     

@@ -6,8 +6,6 @@
 package bubblescreensaver;
 
 import bubblescreensaver.controllers.BubbleController;
-import bubblescreensaver.throwableTool.BubbleThrower;
-import bubblescreensaver.throwableTool.ThrowableFactory;
 import bubblescreensaver.throwableTool.ThrowableFactoryIF;
 import bubblescreensaver.throwableTool.ThrowableObject;
 import bubblescreensaver.view.DisplayFrame;
@@ -25,16 +23,11 @@ public class Main {
     public static void main(String[] args){
         
         String objectType = args[0];
-        ThrowableFactoryIF factory = ThrowableFactory.createThrowableFactory();
+        ThrowableFactoryIF factory  = ThrowableFactoryIF.createThrowableFactory();
         ThrowableObject prototype = factory.getPrototype(objectType);
-        
-        // Thrower
-        BubbleThrower thrower = BubbleThrower.createBubbleThrower();
-        thrower.setPrototype(prototype);
-        
+                
         // Controller
-        BubbleController controller = BubbleController.createBubbleController();
-        controller.setBubbleThrower(thrower);
+        BubbleController controller = BubbleController.createBubbleController(prototype);
         
         // View
         DisplayFrame frame = DisplayFrame.createNewDisplayFrame(DISPLAY_WIDTH_IN_PIXEL, 

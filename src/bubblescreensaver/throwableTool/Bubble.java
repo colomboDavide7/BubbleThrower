@@ -12,25 +12,28 @@ import java.awt.Point;
  *
  * @author davidecolombo
  */
-public class Bubble extends ThrowableObject {
+ class Bubble extends ThrowableObject {
 
+    static Bubble createNewBubble(Image image){
+        return new Bubble(image);
+    }
     
-    static Bubble createNewBubble(){
-        return new Bubble();
+    private Bubble(Image image){
+        super.image = image;
+        initInstanceVariables();
     }
     
     private Bubble(){
-        super.locationInPixel = new Point();
+        initInstanceVariables();
     }
     
-    @Override
-    public ThrowableObject clone() {
-        Bubble clone = new Bubble();
-        Image clonedImage = cloneImage();
-        clone.setImage(clonedImage);
-        return clone;
+    private void initInstanceVariables(){
+        locationInPixel = new Point();
+        direction = new Point();
+        locationToCheck = new Point();
+        wallIntersection = new Point();
     }
-
+    
     @Override
     public Image getImage() {
         return this.image;
@@ -38,12 +41,21 @@ public class Bubble extends ThrowableObject {
 
     @Override
     public int getXLocationInPixel() {
-        return super.locationInPixel.x;
+        return locationToCheck.x;
     }
 
     @Override
     public int getYLocationInPixel() {
-        return super.locationInPixel.y;
+        return locationToCheck.y;
+    }
+    
+    @Override
+    public ThrowableObject clone(Point locationInPixel) {
+        Bubble clone = new Bubble();
+        Image clonedImage = cloneImage();
+        clone.setImage(clonedImage);
+        clone.setLocationInPixel(locationInPixel);
+        return clone;
     }
     
 }

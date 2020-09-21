@@ -7,14 +7,11 @@ package bubblescreensaver.view;
 
 import bubblescreensaver.controllers.DrawModel;
 import bubblescreensaver.controllers.RenderingIF;
-import bubblescreensaver.throwableTool.ThrowableObjectIF;
+import bubblescreensaver.throwableTool.ThrowableObject;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  *
@@ -70,7 +67,7 @@ class GraphicsRenderer extends Thread {
     void draw(Graphics g){
         DrawModel model = interactor.getPreconfigDrawModel();
         
-        Iterator<ThrowableObjectIF> livingObjects = model.getLivingObjects();
+        Iterator<ThrowableObject> livingObjects = model.getLivingObjects();
         drawLivingObjects(g, livingObjects);
         
         if(model.canDrawLine()){
@@ -81,9 +78,9 @@ class GraphicsRenderer extends Thread {
     }
     
 // =============================================================================
-    private void drawLivingObjects(Graphics g, Iterator<ThrowableObjectIF> iterator){
+    private void drawLivingObjects(Graphics g, Iterator<ThrowableObject> iterator){
         while(iterator.hasNext()){
-            ThrowableObjectIF obj = iterator.next();
+            ThrowableObject obj = iterator.next();
             g.drawImage(obj.getImage(),
                         obj.getXLocationInPixel(),
                         obj.getYLocationInPixel(),

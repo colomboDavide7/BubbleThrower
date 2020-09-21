@@ -14,12 +14,11 @@ import javax.imageio.ImageIO;
  *
  * @author davidecolombo
  */
-public class ThrowableFactory implements ThrowableFactoryIF {
-        
-    private String objectType;
+class ThrowableFactory implements ThrowableFactoryIF {
+    
     private ThrowableObject prototype;
     
-    public static ThrowableFactoryIF createThrowableFactory(){
+    static ThrowableFactoryIF createThrowableFactory(){
         return new ThrowableFactory();
     }
     
@@ -27,17 +26,16 @@ public class ThrowableFactory implements ThrowableFactoryIF {
     }
     
     @Override
-    public ThrowableObject getPrototype(String objectType) {
-        this.objectType = objectType;
-        this.loadResource();
+    public ThrowableObject getPrototype(String objectType){
+        this.loadPrototype(objectType);
         return this.prototype;
     }
     
-    private void loadResource() {
+    private void loadPrototype(String objectType) {
         try{
             File[] allFiles   = getFilesFromWorkingDir();
-            File searchedFile = searchFileNameThatContainsType(allFiles);
-            createThrowablePrototype(searchedFile.getName());
+            File searchedFile = searchFileNameThatContainsType(allFiles, objectType);
+            createThrowablePrototype(searchedFile.getName(), objectType);
         }catch(LoadResourceException ex){
             System.out.println(ex.getMessage());
             System.exit(1);
@@ -51,30 +49,29 @@ public class ThrowableFactory implements ThrowableFactoryIF {
         return allFiles;
     }
     
-    private File searchFileNameThatContainsType(File[] allFiles){
+    private File searchFileNameThatContainsType(File[] allFiles, String objectType){
         for(int i = 0; i < allFiles.length; i++)
                 if(!allFiles[i].isDirectory())
-                    if(allFiles[i].getName().contains(this.objectType))
+                    if(allFiles[i].getName().contains(objectType))
                         return allFiles[i];
         throw new LoadResourceException("There's no file that contains \"" 
-                                       + this.objectType 
+                                       + objectType 
                                        + "\" in its name.");
     }
     
-    private void createThrowablePrototype(String filename){
+    private void createThrowablePrototype(String filename, String objectType){
         Image image = readImageFromFile(filename);
-        getThrowableObjectByType();
-        this.prototype.setImage(image);
+        getThrowableObjectByType(objectType, image);
     }
     
-    private void getThrowableObjectByType(){
-        switch(this.objectType){
+    private void getThrowableObjectByType(String objectType, Image image){
+        switch(objectType){
             case "bubble":
-                this.prototype = Bubble.createNewBubble();
+                this.prototype = Bubble.createNewBubble(image);
                 break;
             default:
                 throw new LoadResourceException("There's no prototype associated "
-                                              + "to: \"" + this.objectType + "\"");
+                                              + "to: \"" + objectType + "\"");
         }
     }
     

@@ -6,20 +6,23 @@
 package bubblescreensaver.throwableTool;
 
 import java.awt.Point;
-import java.util.Iterator;
 
 /**
  *
  * @author davidecolombo
  */
-public interface BubbleThrowerIF {
-        
-    public abstract void addThrowableObjectAtLocation(Point point);
+class LinearBoundary {
     
-    public abstract void setReleasedPoint(Point point);
+    Point p1;
+    Point p2;
     
-    public abstract void throwBubble();
+    static LinearBoundary createLinearBoundary(Point p1, Point p2){
+        return new LinearBoundary(p1, p2);
+    }
     
-    public abstract Iterator getLivingObjects();
+    private LinearBoundary(Point p1, Point p2){
+        this.p1 = p1;
+        this.p2 = p2;
+    }
     
 }
