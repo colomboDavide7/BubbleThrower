@@ -7,7 +7,6 @@ package bubblescreensaver.throwableTool;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 /**
@@ -16,19 +15,57 @@ import java.awt.image.BufferedImage;
  */
 public abstract class ThrowableObject {
     
-    Image image;
-    Point locationInPixel;
-    Point direction;
-    Point locationToCheck;
-    Point wallIntersection;
+    protected int velocityInPixel;
+    protected Image image;
     
-    public abstract ThrowableObject clone(Point locationInPixel);
+    protected int xTemp;
+    protected int yTemp;
+    protected int xPosition;
+    protected int yPosition;
+    protected int xDirection;
+    protected int yDirection;
+    protected int xIntersection;
+    protected int yIntersection;
+    
+    public abstract ThrowableObject clone(int xPos, int yPos);
     
     public abstract Image getImage();
     
-    public abstract int getXLocationInPixel();
+    public abstract int getXTempInPixel();
     
-    public abstract int getYLocationInPixel();
+    public abstract int getYTempInPixel();
+        
+    protected synchronized void setXTempInPixel(int xTemp){
+        this.xTemp = xTemp;
+    }
+    
+    protected synchronized void setYTempInPixel(int yTemp){
+        this.yTemp = yTemp;
+    }
+    
+    protected synchronized void addDeltaToXTemp(int delta){
+        this.xTemp += delta;
+    }
+    
+    protected synchronized void addDeltaToYTemp(int delta){
+        this.yTemp += delta;
+    }
+    
+    protected synchronized void setXTempEqualToXIntersection(){
+        this.xTemp = this.xIntersection;
+    }
+    
+    protected synchronized void setYTempEqualToYIntersection(){
+        this.yTemp = this.yIntersection;
+    }
+    
+    protected void setXPositionEqualToXIntersection(){
+        this.xPosition = this.xIntersection;
+    }
+    
+    protected void setYPositionEqualToYIntersection(){
+        this.yPosition = this.yIntersection;
+    }
     
     protected Image cloneImage(){
         BufferedImage clonedImage = new BufferedImage(this.image.getWidth(null), 
@@ -42,11 +79,6 @@ public abstract class ThrowableObject {
     
     protected void setImage(Image image){
         this.image = image;
-    }
-    
-    protected void setLocationInPixel(Point locationInPixel){
-        this.locationInPixel = locationInPixel;
-        this.locationToCheck = new Point(locationInPixel);
     }
     
 }

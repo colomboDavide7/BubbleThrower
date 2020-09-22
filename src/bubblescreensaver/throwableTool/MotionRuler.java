@@ -28,12 +28,14 @@ class MotionRuler implements MotionRulerIF {
     private List<LinearBoundary> walls;
     private List<ThrowableMover> movers;
     private ThrowableMover moverToLaunch;
+    private DirectionHandler directionHandler;
     
     static MotionRuler createMotionRuler() {
         return new MotionRuler();
     }
     
     private MotionRuler(){
+        this.directionHandler = new DirectionHandler();
         this.movers = new ArrayList<>();
         instantiateBoundaries();
     }
@@ -48,9 +50,7 @@ class MotionRuler implements MotionRulerIF {
     
     @Override
     public void createThrowableMoverFor(ThrowableObject obj) {
-        Point source = obj.locationInPixel;
-        DirectionHandler dh = new DirectionHandler(source);
-        this.moverToLaunch = new ThrowableMover(obj, this, dh);
+        this.moverToLaunch = new ThrowableMover(obj, this);
     }
     
     @Override
@@ -58,12 +58,16 @@ class MotionRuler implements MotionRulerIF {
         this.moverToLaunch.launch(percentagePower, releasedPoint);
         this.movers.add(moverToLaunch);
     }
+        
+    void assignDirectionPoint(ThrowableObject toMove){
+        directionHandler.getDirectionFromPointToPoint(toMove);
+    }
     
     void assignWallIntersection(ThrowableObject toMove){
-        int x1 = toMove.locationInPixel.x;
-        int y1 = toMove.locationInPixel.y;
-        int x2 = toMove.direction.x;
-        int y2 = toMove.direction.y;
+        int x1 = toMove.xPosition;
+        int y1 = toMove.yPosition;
+        int x2 = toMove.xDirection;
+        int y2 = toMove.yDirection;
             
         for(LinearBoundary wall : walls){
             int x3 = wall.p1.x;
@@ -80,36 +84,37 @@ class MotionRuler implements MotionRulerIF {
             double u = -((x1 - x2)*(y1 - y3) - (y1 - y2)*(x1 - x3)) / denominator;
             
             if(t > 0 && t < 1 && u > 0 && u < 1){
-                toMove.wallIntersection = new Point((int) (x1 + t*(x2 - x1)), 
-                                                    (int) (y1 + t*(y2 - y1)));
+                toMove.xIntersection = (int) (x1 + t*(x2 - x1));
+                toMove.yIntersection = (int) (y1 + t*(y2 - y1));
                 break;
             }
         }
     }
     
-    void checkLocationForMover(ThrowableObject toMove){        
+    void movementRequestValidation(ThrowableObject toMove){        
         checkCollisionWithBorder(toMove);
         checkCollisionWithMover(toMove);
     }
     
     private void checkCollisionWithBorder(ThrowableObject toMove){   
-        if(this.wallIntersectionReached(toMove))
+        if(wallIntersectionReached(toMove))
             throw new BoundaryHittedException();
     }
     
     private boolean wallIntersectionReached(ThrowableObject toMove){
-        if(toMove.wallIntersection.y == LOWER_BOUND_Y)
-            if(toMove.locationToCheck.y <= toMove.wallIntersection.y)
+        if(toMove.yIntersection == LOWER_BOUND_Y){
+            if(toMove.yTemp <= toMove.yIntersection)
                 return true;
-        else if(toMove.wallIntersection.y == UPPER_BOUND_Y)
-            if(toMove.locationToCheck.y >= toMove.wallIntersection.y)
+        }else if(toMove.yIntersection == UPPER_BOUND_Y){
+            if((toMove.yTemp + toMove.image.getHeight(null)) >= toMove.yIntersection)
                 return true;
-        else if(toMove.wallIntersection.x == LOWER_BOUND_X)
-            if(toMove.locationToCheck.x <= toMove.wallIntersection.x)
+        }else if(toMove.xIntersection == LOWER_BOUND_X){
+            if(toMove.xTemp <= toMove.xIntersection)
                 return true;
-        else if(toMove.wallIntersection.x == UPPER_BOUND_X)
-            if(toMove.locationToCheck.x >= toMove.wallIntersection.x)
+        }else if(toMove.xIntersection == UPPER_BOUND_X){
+            if((toMove.xTemp + toMove.image.getWidth(null)) >= toMove.xIntersection)
                 return true;
+        }
         
         return false;
     }

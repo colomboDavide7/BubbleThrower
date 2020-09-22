@@ -36,9 +36,9 @@ public class BubbleController extends MouseAdapter implements RenderingIF {
 // =============================================================================
     @Override
     public void mousePressed(MouseEvent evt){
-        Point centeredLocation = this.getCenteredLocation(evt.getPoint());
-        ThrowableObject clone = prototype.clone(centeredLocation);
-        model.addPressedPoint(centeredLocation);
+//        Point centeredLocation = this.getCenteredLocation(evt.getPoint());
+        ThrowableObject clone = prototype.clone(evt.getPoint().x, evt.getPoint().y);
+        model.addPressedPoint(evt.getPoint());
         motionRuler.createThrowableMoverFor(clone);
         model.addLivingObjects(clone);
     }
@@ -52,16 +52,16 @@ public class BubbleController extends MouseAdapter implements RenderingIF {
     
     @Override
     public void mouseDragged(MouseEvent evt){
-        model.addDraggedPoint(this.getCenteredLocation(evt.getPoint()));
+        model.addDraggedPoint(evt.getPoint());
         model.setLineAsDrawable();
     }
     
     @Override
     public void mouseReleased(MouseEvent evt){
-        Point centeredPoint = this.getCenteredLocation(evt.getPoint());
+//        Point centeredPoint = this.getCenteredLocation(evt.getPoint());
         model.setLineAsNotDrawable();
         motionRuler.launchLastMoverCreated(model.getPercentagePower(), 
-                                           centeredPoint);
+                                           evt.getPoint());
     }
     
 // =============================================================================

@@ -6,7 +6,6 @@
 package bubblescreensaver.throwableTool;
 
 import java.awt.Image;
-import java.awt.Point;
 
 /**
  *
@@ -20,42 +19,37 @@ import java.awt.Point;
     
     private Bubble(Image image){
         super.image = image;
-        initInstanceVariables();
+        super.velocityInPixel = 5;
     }
     
     private Bubble(){
-        initInstanceVariables();
-    }
-    
-    private void initInstanceVariables(){
-        locationInPixel = new Point();
-        direction = new Point();
-        locationToCheck = new Point();
-        wallIntersection = new Point();
     }
     
     @Override
     public Image getImage() {
         return this.image;
     }
-
+    
     @Override
-    public int getXLocationInPixel() {
-        return locationToCheck.x;
+    public int getXTempInPixel() {
+        return super.xTemp;
     }
 
     @Override
-    public int getYLocationInPixel() {
-        return locationToCheck.y;
+    public int getYTempInPixel() {
+        return super.yTemp;
     }
     
     @Override
-    public ThrowableObject clone(Point locationInPixel) {
+    public ThrowableObject clone(int xPos, int yPos) {
         Bubble clone = new Bubble();
         Image clonedImage = cloneImage();
         clone.setImage(clonedImage);
-        clone.setLocationInPixel(locationInPixel);
+        clone.xPosition = xPos;
+        clone.yPosition = yPos;
+        clone.xTemp = xPos;
+        clone.yTemp = yPos;
         return clone;
     }
-    
+
 }

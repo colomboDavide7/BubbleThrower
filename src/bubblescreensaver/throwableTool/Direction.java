@@ -21,13 +21,12 @@ class Direction {
         return (double) ((angleInDegrees / 180) * Math.PI);
     }
     
-    private Point direction;
-    private Point source;
+    private int xDirection;
+    private int yDirection;
     private double angleInDegrees;
     
-    Direction(double angleInDegrees, Point source){
+    Direction(double angleInDegrees){
         this.angleInDegrees = angleInDegrees;
-        this.source = source;
         calculateDirectionPoint();
     }
     
@@ -35,12 +34,16 @@ class Direction {
         double angleInRadians = degreesToRadians(this.angleInDegrees);
         double modulus = Math.sqrt(Math.pow(MotionRuler.UPPER_BOUND_X - MotionRuler.LOWER_BOUND_X, 2) + 
                                    Math.pow(MotionRuler.UPPER_BOUND_Y - MotionRuler.LOWER_BOUND_Y, 2));
-        this.direction = new Point((int) (Math.cos(angleInRadians)*modulus),
-                                   (int) (Math.sin(-angleInRadians)*modulus));
+        this.xDirection = (int) (Math.cos(angleInRadians)*modulus);
+        this.yDirection = (int) (Math.sin(-angleInRadians)*modulus);
     }
     
-    Point getDirectionPoint(){
-        return this.direction;
+    int getXDirection(){
+        return this.xDirection;
+    }
+    
+    int getYDirection(){
+        return this.yDirection;
     }
     
     boolean directionMatch(int angleInDegrees){

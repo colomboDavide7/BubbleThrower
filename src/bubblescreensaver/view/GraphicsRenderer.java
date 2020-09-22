@@ -82,8 +82,8 @@ class GraphicsRenderer extends Thread {
         while(iterator.hasNext()){
             ThrowableObject obj = iterator.next();
             g.drawImage(obj.getImage(),
-                        obj.getXLocationInPixel(),
-                        obj.getYLocationInPixel(),
+                        obj.getXTempInPixel(),
+                        obj.getYTempInPixel(),
                         null);
         }
     }

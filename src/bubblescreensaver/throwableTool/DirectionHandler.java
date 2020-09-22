@@ -18,27 +18,29 @@ class DirectionHandler {
     private List<Direction> possibleDirections;
     private final int INFINITY_SLOPE = 100000;
     
-    DirectionHandler(Point source){
-        instantiateDirections(source);
+    DirectionHandler(){
+        instantiateDirections();
     }
     
-    private void instantiateDirections(Point source){
+    private void instantiateDirections(){
         possibleDirections = new ArrayList<>();
         for(int angle = 0; angle < 360; angle++)
-            possibleDirections.add(new Direction(angle, source));
+            possibleDirections.add(new Direction(angle));
     }
     
-    Point getDirectionFromPointToPoint(Point from, Point to){
-        double angleInDegrees = calculateAngleInDegreesFromSlope(from, to);
+    void getDirectionFromPointToPoint(ThrowableObject toMove){
+        double angleInDegrees = calculateAngleInDegreesFromSlope(toMove);
         for(Direction d : possibleDirections)
-            if(d.directionMatch((int) angleInDegrees))
-                return d.getDirectionPoint();
-        return null;
+            if(d.directionMatch((int) angleInDegrees)){
+                toMove.xDirection = d.getXDirection();
+                toMove.yDirection = d.getYDirection();
+                return;
+            }
     }
     
-    private double calculateAngleInDegreesFromSlope(Point from, Point to){
-        int deltaXinPixel = to.x - from.x;
-        int deltaYinPixel = to.y - from.y;
+    private double calculateAngleInDegreesFromSlope(ThrowableObject toMove){
+        int deltaXinPixel = toMove.xPosition - toMove.xIntersection;
+        int deltaYinPixel = toMove.yPosition - toMove.yIntersection;
         
         if(deltaXinPixel < 3 && deltaXinPixel > -3)
             return INFINITY_SLOPE;
@@ -48,12 +50,11 @@ class DirectionHandler {
         
         double slope = (-deltaYinPixel / (double) deltaXinPixel);
         
-        return getAngleInDegrees(slope, deltaXinPixel, deltaYinPixel);
+        return applyHeuristicCorrectionToAngle(slope, deltaXinPixel, deltaYinPixel);
     }
     
-    private double getAngleInDegrees(double slope, int deltaXInPixel, int deltaYInPixel){
+    private double applyHeuristicCorrectionToAngle(double slope, int deltaXInPixel, int deltaYInPixel){
         double angleInDegrees = Direction.radiansToDegrees(Math.atan(slope));
-        
         if(slope > 0 && slope < this.INFINITY_SLOPE){
             if(deltaXInPixel < 0 && deltaYInPixel > 0)
                 angleInDegrees += 180;
@@ -74,18 +75,19 @@ class DirectionHandler {
     }
     
     void reflectLocationAcrossIntersection(ThrowableObject toMove){
-        int deltaInPixel = 0;
-        boolean horizontalMirroring = toMove.wallIntersection.y == MotionRuler.LOWER_BOUND_Y || 
-                                      toMove.wallIntersection.y == MotionRuler.UPPER_BOUND_Y;
-        boolean verticalMirroring   = toMove.wallIntersection.x == MotionRuler.LOWER_BOUND_X || 
-                                      toMove.wallIntersection.x == MotionRuler.UPPER_BOUND_X;
-        if(horizontalMirroring)
-            deltaInPixel = toMove.wallIntersection.x - toMove.locationInPixel.x;
-        else if(verticalMirroring)
-           deltaInPixel = toMove.wallIntersection.y - toMove.locationInPixel.y;
+        int deltaInPixel;
+        boolean horizontalMirroring = toMove.yIntersection == MotionRuler.LOWER_BOUND_Y || 
+                                      toMove.yIntersection == MotionRuler.UPPER_BOUND_Y;
         
-        toMove.locationInPixel.x = toMove.wallIntersection.x + deltaInPixel;
-        toMove.locationInPixel.y = toMove.wallIntersection.y + deltaInPixel;
+        boolean verticalMirroring   = toMove.xIntersection == MotionRuler.LOWER_BOUND_X || 
+                                      toMove.xIntersection == MotionRuler.UPPER_BOUND_X;
+        if(horizontalMirroring){
+            deltaInPixel = toMove.xIntersection - toMove.xPosition;
+            toMove.xPosition = toMove.xIntersection + deltaInPixel;            
+        }else if(verticalMirroring){
+           deltaInPixel = toMove.yIntersection - toMove.yPosition;
+           toMove.yPosition = toMove.yIntersection + deltaInPixel;
+        }
     }
     
 }
